@@ -1,0 +1,4 @@
+^{:open-url false
+  :cljs-devtools false}
+{:main cmanagement.main
+ :target :bundle}

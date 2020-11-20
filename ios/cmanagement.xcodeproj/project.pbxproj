@@ -194,7 +194,6 @@
 				8F6F0B0E9591C874B8E4E706 /* Pods-cmanagement-tvOSTests.debug.xcconfig */,
 				E20749F762934F5BF51AAAB0 /* Pods-cmanagement-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -668,6 +667,7 @@
 				PRODUCT_NAME = cmanagement;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				VALID_ARCHS = "arm64e armv7s x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -689,6 +689,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = cmanagement;
 				SWIFT_VERSION = 5.0;
+				VALID_ARCHS = "arm64e armv7s x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
