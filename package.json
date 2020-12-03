@@ -10,7 +10,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/netinfo": "^5.9.9",
+    "aws-amplify": "^3.3.10",
+    "aws-amplify-react": "^4.2.14",
     "react": "16.13.1",
+    "react-dom": "^17.0.1",
     "react-native": "0.63.3",
     "react-native-figwheel-bridge": "^1.0.11"
   },
