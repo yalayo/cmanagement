@@ -1,6 +1,18 @@
 (ns cmanagement.main
   (:require [reagent.core :as r]
-            [react-native :as rn]))
+            ["react-native" :as rn]
+            ["aws-amplify" :refer (Amplify)]
+            [re-frame.core :as re-frame]
+            [cmanagement.users.views :as users]
+            [cmanagement.users.events :as events]))
+
+(def aws-manual
+  ;; User pool reframerecomamplifye16cd456a_userpool_16cd456a-dev
+  {:Auth {:identityPoolId "us-east-1:61fe6ded-9c0f-481d-b32b-b624ad8119dc"
+          :region "us-east-1"
+          :userPoolId "us-east-1_GdM23KoC7"
+          :userPoolWebClientId "3dbbodfcli1spu0junujjorjo6"
+          }})
 
 (defn adapt [class]
   (r/adapt-react-class class))
@@ -9,13 +21,29 @@
 (def view (adapt rn/View))
 (def text (adapt rn/Text))
 
-(defn app []
-  [safe-area-view {:flex 1}
-   [view {:flex 1 :align-items "center" :justify-content "center"}
-    [text {:style {:font-size 50}} "Hello Jason!"]]])
 
-;; the function figwheel-rn-root must be provided. It will be called by 
-;; react-native-figwheel-bridge to render your application. 
+(defn app []
+  [safe-area-view {:flexDirection "row" :padding 20}
+   [users/sign-in]])
+
+
+
+(defn dash-board []
+  [safe-area-view {:flexDirection "row" :padding 20}
+   [view {:flex 1 :align-items "center" :justify-content "center" :borderWidth 1 :borderRadius 10}
+    [text "TOTAL INGRESOS"]
+    [text {:style {:font-size 18 :color "blue"}} "$32575.00"]]
+   [view {:flex 1 :align-items "center" :justify-content "center" :borderWidth 1 :borderRadius 10}
+    [text "TOTAL GASTOS"]
+    [text {:style {:font-size 18 :color "blue"}} "$20590.00"]]
+   [view {:flex 1 :align-items "center" :justify-content "center" :borderWidth 1 :borderRadius 10}
+    [text "GANANCIA TOTAL"]
+    [text {:style {:font-size 18 :color "blue"}} "$17100.00"]]])
+
+;; the function figwheel-rn-root must be provided. It will be called by
+;; react-native-figwheel-bridge to render your application.
 ;; You can configure the name of this function with config.renderFn
 (defn figwheel-rn-root []
+  (re-frame/dispatch-sync [::events/initialize-db])
+  (.configure Amplify (clj->js aws-manual))
   (r/as-element [app]))
