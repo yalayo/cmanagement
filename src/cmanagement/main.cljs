@@ -8,10 +8,10 @@
 
 (def aws-manual
   ;; User pool reframerecomamplifye16cd456a_userpool_16cd456a-dev
-  {:Auth {:identityPoolId "us-east-1:61fe6ded-9c0f-481d-b32b-b624ad8119dc"
+  {:Auth {:identityPoolId "us-east-1:6e9a4922-32d8-431d-9f8a-5d3a5015027a"
           :region "us-east-1"
-          :userPoolId "us-east-1_GdM23KoC7"
-          :userPoolWebClientId "3dbbodfcli1spu0junujjorjo6"
+          :userPoolId "us-east-1_ihQJoizHk"
+          :userPoolWebClientId "6gnfb2fg2bpkjqi22lp15jtav8"
           }})
 
 (defn adapt [class]

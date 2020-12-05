@@ -20,18 +20,14 @@
   (let [default {:email "" :password ""}
         credentials (reagent/atom default)]
     (fn []
-      (let [{:keys [email password]} @credentials
-            login-user (fn [event credentials]
-                         (.preventDefault event)
-                         (re-frame/dispatch [::login credentials]))]
+      (let [{:keys [email password]} @credentials]
         [view {:flex 1}
          [text {:style {:font-size 30 :align-self :center}} "Sign in"]
-         ;(when (:login errors)
-           ;[errors-list (:login errors)])
-         [text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! credentials assoc :email (-> % .-target .-value))}]
-         [text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :on-change-text #(swap! credentials assoc :password (-> % .-target .-value))} ]
-         [:> rn/Button {:title   "Sign In"} :on-click #(login-user % @credentials)]]))))
-
-;; :value email :on-change #(swap! credentials assoc :email (-> % .-target .-value))
-
-;; :value password :on-change #(swap! credentials assoc :password (-> % .-target .-value))
+                                        ;(when (:login errors)
+                                        ;[errors-list (:login errors)])
+         [text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! credentials assoc :email  %)}]
+         [text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :on-change-text #(swap! credentials assoc :password %)}]
+         [:> rn/Button {:title   "Sign In"} :on-click #(re-frame/dispatch [:login @credentials])]
+         [:> rn/TouchableOpacity {:style {}
+                                  :on-press #(re-frame/dispatch [:login @credentials])}
+          [:> rn/Text {:style {}} "Click me, I'll count"]]]))))
