@@ -2,7 +2,6 @@
   (:require
    [clojure.string :as string]
    [re-frame.core :as re-frame]
-   ["@aws-amplify/auth" :refer (Auth)]
    ["amazon-cognito-identity-js" :refer [AuthenticationDetails CognitoUserPool CognitoUser]]
    [cmanagement.users.db :as db]))
 
@@ -12,11 +11,6 @@
  ::initialize-db
  (fn initialize-db-handler [_ _]
    db/default-db))
-
-
-;(def AuthenticationDetails (-> js/AmazonCognitoIdentity .-AuthenticationDetails))
-;(def CognitoUserPool (-> AmazonCognitoIdentity .-CognitoUserPool))
-;(def CognitoUser (-> AmazonCognitoIdentity .-CognitoUser))
 
 (re-frame/reg-event-fx
  :login
@@ -33,11 +27,4 @@
                          {:onSuccess (fn [result]
                                        (js/console.log result))
                           :onFailure (fn [error]
-                                       (js/console.log error))})))))
-     ;(js/console.log password))))
-     ;(.signIn Auth email password
-      ;        (clj->js
-       ;        {:onSuccess (fn [data]
-        ;                     (js/console.log data))
-         ;       :onFailure (fn [data]
-          ;                   (js/console.log data))})))))
+                                       (js/console.error error))})))))

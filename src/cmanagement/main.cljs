@@ -2,6 +2,8 @@
   (:require [reagent.core :as r]
             ["react-native" :as rn]
             ["aws-amplify" :refer (Amplify)]
+            ["@react-navigation/stack" :refer [createStackNavigator]]
+            ["@react-navigation/native" :refer [NavigationContainer]]
             [re-frame.core :as re-frame]
             [cmanagement.users.views :as users]
             [cmanagement.users.events :as events]))
@@ -17,16 +19,20 @@
 (defn adapt [class]
   (r/adapt-react-class class))
 
-(def safe-area-view (adapt rn/SafeAreaView))
+(def stack (createStackNavigator))
+
 (def view (adapt rn/View))
 (def text (adapt rn/Text))
-
+(def navigator (adapt (.-Navigator stack)))
+(def screen (adapt (.-Screen stack)))
+(def nav-container (adapt NavigationContainer))
 
 (defn app []
-  [safe-area-view {:flexDirection "row" :padding 20}
-   [users/sign-in]])
-
-
+  [nav-container
+   [navigator {:mode :modal :header-mode :none :initial-route-name :main}
+    [screen {:name :main :component (r/reactify-component users/sign-in) :options {:gestureEnabled false}}]]])
+    ;[navigator {:mode :modal :header-mode :none}
+                                        ;[screen {:name :main :component users/sign-in}]]]])
 
 (defn dash-board []
   [safe-area-view {:flexDirection "row" :padding 20}
