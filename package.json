@@ -12,14 +12,21 @@
   "dependencies": {
     "@aws-amplify/auth": "^3.4.14",
     "@aws-amplify/core": "^3.8.6",
+    "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.9",
+    "@react-navigation/native": "^5.8.10",
+    "@react-navigation/stack": "^5.12.8",
     "amazon-cognito-identity-js": "^4.5.5",
     "aws-amplify": "^3.3.10",
     "aws-amplify-react": "^4.2.14",
     "react": "16.13.1",
     "react-dom": "^17.0.1",
     "react-native": "0.63.3",
-    "react-native-figwheel-bridge": "^1.0.11"
+    "react-native-figwheel-bridge": "^1.0.11",
+    "react-native-gesture-handler": "^1.9.0",
+    "react-native-reanimated": "^1.13.2",
+    "react-native-safe-area-context": "^3.1.9",
+    "react-native-screens": "^2.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
