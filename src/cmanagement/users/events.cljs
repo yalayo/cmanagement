@@ -1,6 +1,6 @@
 (ns cmanagement.users.events
   (:require
-   [clojure.string :as string]
+   ;[clojure.data.json :as json]
    [re-frame.core :as re-frame]
    ["amazon-cognito-identity-js" :refer [AuthenticationDetails CognitoUserPool CognitoUser]]
    [cmanagement.users.db :as db]))
@@ -14,7 +14,7 @@
 
 (re-frame/reg-event-fx
  :login
- (fn [{:keys [db]} [_ credentials]]
+ (fn [{:keys [db]} [_ credentials navigation]]
    (let [email (credentials :email)
          password (credentials :password)
          data {:Username email :Password password}
@@ -27,4 +27,28 @@
                          {:onSuccess (fn [result]
                                        (js/console.log result))
                           :onFailure (fn [error]
-                                       (js/console.error error))})))))
+                                       (js/console.error error))
+                          :newPasswordRequired (fn [user-attributes]
+                                                 (re-frame/dispatch [:store-attributes cognito-user user-attributes])
+                                                 (.navigate navigation :new-password))})))))
+
+(re-frame/reg-event-fx
+ :store-attributes
+ (fn [{:keys [db]} [_ user attributes]]
+   (js/console.log user)
+   (let [with-user (assoc db :cognito-user user)
+         with-attr (assoc with-user :user-attributes attributes)]
+     {:db with-attr})))
+
+(re-frame/reg-event-fx
+ :new-password
+ (fn [{:keys [db]} [_ new-password navigation]]
+   (let [user-attributes (db :user-attributes)
+         cognito-user (db :cognito-user)
+         password (new-password :password)]
+     (js/console.log cognito-user)
+     (.completeNewPasswordChallenge cognito-user password user-attributes
+                                    (clj->js {:onSuccess (fn [result]
+                                                           (js/console.log result))
+                                              :onFailure (fn [error]
+                                                           (js/console.error error))})))))

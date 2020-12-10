@@ -10,3 +10,8 @@
  :loading
  (fn [db _]
    (:loading db)))
+
+(reg-sub
+ :user-attributes
+ (fn [db _]
+   (:user-attributes db)))
