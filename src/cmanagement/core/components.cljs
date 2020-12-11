@@ -5,6 +5,8 @@
 (defn adapt [class]
   (reagent/adapt-react-class class))
 
+(def safe-area-view (adapt rn/SafeAreaView))
+(def view (adapt rn/View))
 (def text (adapt rn/Text))
 (def text-input-adaptor (adapt rn/TextInput))
 (def touchable-opacity (adapt rn/TouchableOpacity))

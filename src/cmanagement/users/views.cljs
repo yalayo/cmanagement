@@ -5,14 +5,6 @@
             [cmanagement.users.events :as events]
             [cmanagement.core.components :as c]))
 
-(defn adapt [class]
-  (reagent/adapt-react-class class))
-
-(def safe-area-view (adapt rn/SafeAreaView))
-(def view (adapt rn/View))
-(def text (adapt rn/Text))
-(def text-input (adapt rn/TextInput))
-
 (defn errors-list [errors]
   [:ul.error-messages
    (for [[key [val]] errors]
@@ -24,10 +16,10 @@
         navigate (:navigate navigation)]
     (fn []
       (let [{:keys [email password]} @credentials]
-        [safe-area-view {:flex 1}
-         [view {:flex 0.2}
-          [text {:style {:font-size 30 :align-self :center}} "Sign in"]]
-         [view {:flex 0.8}
+        [c/safe-area-view {:flex 1}
+         [c/view {:flex 0.2}
+          [c/text {:style {:font-size 30 :align-self :center}} "Sign in"]]
+         [c/view {:flex 0.8}
                                         ;(when (:login errors)
                                         ;[errors-list (:login errors)])
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! credentials assoc :email  %)}]
@@ -40,10 +32,10 @@
         new-password (reagent/atom default)]
     (fn []
       (let [{:keys [password]} @new-password]
-        [safe-area-view {:flex 1}
-         [view {:flex 0.2}
-          [text {:style {:font-size 30 :align-self :center}} "New password"]]
-         [view {:flex 0.8}
+        [c/safe-area-view {:flex 1}
+         [c/view {:flex 0.2}
+          [c/text {:style {:font-size 30 :align-self :center}} "New password"]]
+         [c/view {:flex 0.8}
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :on-change-text #(swap! new-password assoc :password %)}]
           [c/button {:style {} :label "Accept" :on-press #(re-frame/dispatch [:new-password @new-password navigation])}]]]))))
 
