@@ -23,8 +23,8 @@
                                         ;(when (:login errors)
                                         ;[errors-list (:login errors)])
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! credentials assoc :email  %)}]
-          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :on-change-text #(swap! credentials assoc :password %)}]
-          [c/button {:style {} :label "Sign In" :secureTextEntry true :on-press #(do (re-frame/dispatch [:login @credentials navigation]))}]]]))))
+          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :secureTextEntry true :on-change-text #(swap! credentials assoc :password %)}]
+          [c/button {:style {} :label "Sign In" :on-press #(do (re-frame/dispatch [:login @credentials navigation]))}]]]))))
 
 
 (defn new-password [{:keys [navigation] :as props}]
@@ -36,7 +36,7 @@
          [c/view {:flex 0.2}
           [c/text {:style {:font-size 30 :align-self :center}} "New password"]]
          [c/view {:flex 0.8}
-          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :on-change-text #(swap! new-password assoc :password %)}]
+          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :secureTextEntry true :on-change-text #(swap! new-password assoc :password %)}]
           [c/button {:style {} :label "Accept" :on-press #(re-frame/dispatch [:new-password @new-password navigation])}]]]))))
 
 
