@@ -35,7 +35,6 @@
 (re-frame/reg-event-fx
  :store-attributes
  (fn [{:keys [db]} [_ user attributes]]
-   (js/console.log user)
    (let [with-user (assoc db :cognito-user user)
          with-attr (assoc with-user :user-attributes attributes)]
      {:db with-attr})))
@@ -45,9 +44,12 @@
  (fn [{:keys [db]} [_ new-password navigation]]
    (let [user-attributes (db :user-attributes)
          cognito-user (db :cognito-user)
+         temp (js->clj user-attributes :keywordize-keys true)
+         attr (dissoc temp :email_verified)
+         att (dissoc attr :phone_number_verified)
+         with-name (assoc att :name "Temp")
          password (new-password :password)]
-     (js/console.log cognito-user)
-     (.completeNewPasswordChallenge cognito-user password user-attributes
+     (.completeNewPasswordChallenge cognito-user password (clj->js with-name)
                                     (clj->js {:onSuccess (fn [result]
                                                            (js/console.log result))
                                               :onFailure (fn [error]
