@@ -25,7 +25,9 @@
      (.authenticateUser cognito-user details
                         (clj->js
                          {:onSuccess (fn [result]
-                                       (js/console.log result))
+                                       (js/console.log result)
+                                       (re-frame/dispatch [:login-success result])
+                                       (.navigate navigation :register-compound))
                           :onFailure (fn [error]
                                        (js/console.error error))
                           :newPasswordRequired (fn [user-attributes]
@@ -54,3 +56,8 @@
                                                            (js/console.log result))
                                               :onFailure (fn [error]
                                                            (js/console.error error))})))))
+
+(re-frame/reg-event-fx
+ :login-success
+ (fn [{:keys [db]} [_ user]]
+   {:db (assoc db :user user)}))

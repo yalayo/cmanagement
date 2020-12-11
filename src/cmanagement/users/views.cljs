@@ -12,8 +12,7 @@
 
 (defn sign-in [{:keys [navigation] :as props}]
   (let [default {:email "" :password ""}
-        credentials (reagent/atom default)
-        navigate (:navigate navigation)]
+        credentials (reagent/atom default)]
     (fn []
       (let [{:keys [email password]} @credentials]
         [c/safe-area-view {:flex 1}
