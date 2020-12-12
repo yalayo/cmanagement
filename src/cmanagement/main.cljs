@@ -3,8 +3,8 @@
             [re-frame.core :as re-frame]
             [cmanagement.core.components :as c]
             [cmanagement.users.views :as users]
-            [cmanagement.compounds.views :as compounds]
-            [cmanagement.users.events :as events]))
+            [cmanagement.users.subs :as s]
+            [cmanagement.compounds.views :as compounds]))
 
 (defn app []
   [c/nav-container
@@ -17,5 +17,5 @@
 ;; react-native-figwheel-bridge to render your application.
 ;; You can configure the name of this function with config.renderFn
 (defn figwheel-rn-root []
-  (re-frame/dispatch-sync [::events/initialize-db])
+  (re-frame/dispatch-sync [:initialize-app])
     (r/as-element [app]))

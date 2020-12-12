@@ -33,3 +33,7 @@
                                            :color "#5cb85c"}
                                           style))
    [text label]])
+
+(defn errors-list [errors]
+  [view {:style {:margin-horizontal 20 :margin-top 10}}
+   [text {:style {:color "#b85c5c"}} (str errors)]])

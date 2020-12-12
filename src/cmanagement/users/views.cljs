@@ -14,13 +14,14 @@
   (let [default {:email "" :password ""}
         credentials (reagent/atom default)]
     (fn []
-      (let [{:keys [email password]} @credentials]
+      (let [{:keys [email password]} @credentials
+            errors @(re-frame/subscribe [:errors])]
         [c/safe-area-view {:flex 1}
          [c/view {:flex 0.2}
           [c/text {:style {:font-size 30 :align-self :center}} "Sign in"]]
          [c/view {:flex 0.8}
-                                        ;(when (:login errors)
-                                        ;[errors-list (:login errors)])
+          (when (some? errors)
+            [c/errors-list (errors :login)])
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! credentials assoc :email  %)}]
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :secureTextEntry true :on-change-text #(swap! credentials assoc :password %)}]
           [c/button {:style {} :label "Sign In" :on-press #(do (re-frame/dispatch [:login @credentials navigation]))}]]]))))

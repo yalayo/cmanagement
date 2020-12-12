@@ -7,10 +7,10 @@
 
 (def pool-data {:UserPoolId "us-east-1_ihQJoizHk" :ClientId "6a79ijj3m88rqal042ic1rpgbb"})
 
-(re-frame/reg-event-db
- ::initialize-db
- (fn initialize-db-handler [_ _]
-   db/default-db))
+(re-frame/reg-event-fx
+ :initialize-app
+ (fn [_ _]
+   {:db db/default-db}))
 
 (re-frame/reg-event-fx
  :login
@@ -29,7 +29,9 @@
                                        (re-frame/dispatch [:login-success result])
                                        (.navigate navigation :register-compound))
                           :onFailure (fn [error]
-                                       (js/console.error error))
+                                       (let [data (js->clj error :keywordize-keys true)
+                                             message (data :message)]
+                                         (re-frame/dispatch [:login-error message])))
                           :newPasswordRequired (fn [user-attributes]
                                                  (re-frame/dispatch [:store-attributes cognito-user user-attributes])
                                                  (.navigate navigation :new-password))})))))
@@ -56,6 +58,11 @@
                                                            (js/console.log result))
                                               :onFailure (fn [error]
                                                            (js/console.error error))})))))
+
+(re-frame/reg-event-fx
+ :login-error
+ (fn [{:keys [db]} [_ error]]
+   {:db (assoc-in db [:errors :login] error)}))
 
 (re-frame/reg-event-fx
  :login-success
