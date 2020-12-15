@@ -76,6 +76,22 @@
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :secureTextEntry true :on-change-text #(swap! new-password assoc :password %)}]
           [c/button {:style {} :label "Accept" :on-press #(re-frame/dispatch [:new-password @new-password navigation])}]]]))))
 
+(defn confirm-user [{:keys [navigation] :as props}]
+  (let [default {:code ""}
+        confirmation-code (reagent/atom default)]
+    (fn []
+      (let [{:keys [code]} @confirmation-code]
+        [c/safe-area-view {:flex 1}
+         [c/view {:flex 0.2}
+          [c/text {:style {:font-size 30 :align-self :center}} "Confirm user"]]
+         [c/view {:flex 0.8}
+          (when (some? errors)
+            [c/errors-list (errors :register)])
+          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Conformation code" :default-value code :on-change-text #(swap! confirmation-code assoc :code %)}]
+          [c/button {:style {} :label "Accept"
+                     :on-press #(re-frame/dispatch [:confirm-user code navigation])
+                     :disabled (string/blank? code)}]]]))))
+
 
 ;(defn loading [props]
 ;  (fn [props]

@@ -51,11 +51,11 @@
      (.signUp pool email password (clj->js attribute-list) nil
                         (fn [error result]
                           (if (some? error)
-                            (re-frame/dispatch [:register-error "Invalid user or password!"])
-                            (js/console.log result))
-                          ;(re-frame/dispatch [:register-success result])
-                          ;(.navigate navigation :register-compound))
-                          )))))
+                            (do
+                              (re-frame/dispatch [:register-error "Invalid user or password!"])
+                              (js/console.error error))
+                            (do (re-frame/dispatch [:register-success email])
+                                (.navigate navigation :confirm-user))))))))
 
 (re-frame/reg-event-fx
  :store-attributes
@@ -81,6 +81,20 @@
                                                            (js/console.error error))})))))
 
 (re-frame/reg-event-fx
+ :confirm-user
+ (fn [{:keys [db]} [_ code navigation]]
+   (let [pool (new CognitoUserPool (clj->js pool-data))
+         user-data {:Username (db :user-email) :Pool pool}
+         cognito-user (new CognitoUser (clj->js user-data))]
+     (.confirmRegistration cognito-user code true
+                           (fn [error result]
+                             (if (some? error)
+                               (do
+                                 (re-frame/dispatch [:register-error "Invalid confirmation code!"])
+                                 (js/console.error error))
+                               (.navigate navigation :register-compound)))))))
+
+(re-frame/reg-event-fx
  :login-error
  (fn [{:keys [db]} [_ error]]
    {:db (assoc-in db [:errors :login] error)}))
@@ -98,4 +112,4 @@
 (re-frame/reg-event-fx
  :register-success
  (fn [{:keys [db]} [_ user]]
-   {:db (assoc db :user user)}))
+   {:db (assoc db :user-email user)}))
