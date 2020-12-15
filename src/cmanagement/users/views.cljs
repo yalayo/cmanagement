@@ -2,8 +2,11 @@
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
             ["react-native" :as rn]
+            [clojure.string :as string]
+            [clojure.spec.alpha :as s]
             [cmanagement.users.events :as events]
-            [cmanagement.core.components :as c]))
+            [cmanagement.core.components :as c]
+            [cmanagement.users.specs :as specs]))
 
 (defn errors-list [errors]
   [:ul.error-messages
@@ -18,13 +21,47 @@
             errors @(re-frame/subscribe [:errors])]
         [c/safe-area-view {:flex 1}
          [c/view {:flex 0.2}
-          [c/text {:style {:font-size 30 :align-self :center}} "Sign in"]]
+          [c/text {:style {:font-size 30 :align-self :center}} "Sign in"]
+          [c/button {:style {} :label "Sign Up" :on-press #(.navigate navigation :sign-up)}]]
+
          [c/view {:flex 0.8}
           (when (some? errors)
             [c/errors-list (errors :login)])
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! credentials assoc :email  %)}]
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :secureTextEntry true :on-change-text #(swap! credentials assoc :password %)}]
-          [c/button {:style {} :label "Sign In" :on-press #(do (re-frame/dispatch [:login @credentials navigation]))}]]]))))
+          [c/button {:style {} :label "Sign In"
+                     :on-press #(if (s/valid? ::specs/email email)
+                                                             (re-frame/dispatch [:login @credentials navigation])
+                                                             (re-frame/dispatch [:login-error "Invalid email, please correct it!"]))
+                     :disabled (or (string/blank? email)
+                                   (string/blank? password))}]]]))))
+
+(defn sign-up [{:keys [navigation] :as props}]
+  (let [default {:email "" :password "" :password-conf "" :name ""}
+        user-data (reagent/atom default)]
+    (fn []
+      (let [{:keys [email password password-conf name]} @user-data
+            errors @(re-frame/subscribe [:errors])]
+        [c/safe-area-view {:flex 1}
+         [c/view {:flex 0.1}
+          [c/text {:style {:font-size 30 :align-self :center}} "Sign up"]]
+         [c/view {:flex 0.9}
+          (when (some? errors)
+            [c/errors-list (errors :register)])
+          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Name" :default-value name :on-change-text #(swap! user-data assoc :name  %)}]
+          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! user-data assoc :email  %)}]
+          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :on-change-text #(swap! user-data assoc :password %)}]
+          [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password confirmation" :default-value password-conf :on-change-text #(swap! user-data assoc :password-conf %)}]
+          [c/button {:style {} :label "Sign Up"
+                     :on-press #(if (s/valid? ::specs/email email)
+                                  (if (= password password-conf)
+                                    (re-frame/dispatch [:register @user-data navigation])
+                                    (re-frame/dispatch [:register-error "Password should match the password confirmation!"]))
+                                  (re-frame/dispatch [:register-error "Invalid email, please correct it!"]))
+                     :disabled (or (string/blank? name)
+                                   (string/blank? email)
+                                   (string/blank? password)
+                                   (string/blank? password-conf))}]]]))))
 
 
 (defn new-password [{:keys [navigation] :as props}]

@@ -2,7 +2,7 @@
   (:require
    ;[clojure.data.json :as json]
    [re-frame.core :as re-frame]
-   ["amazon-cognito-identity-js" :refer [AuthenticationDetails CognitoUserPool CognitoUser]]
+   ["amazon-cognito-identity-js" :refer [AuthenticationDetails CognitoUserPool CognitoUserAttribute CognitoUser]]
    [cmanagement.users.db :as db]))
 
 (def pool-data {:UserPoolId "us-east-1_ihQJoizHk" :ClientId "6a79ijj3m88rqal042ic1rpgbb"})
@@ -37,6 +37,27 @@
                                                  (.navigate navigation :new-password))})))))
 
 (re-frame/reg-event-fx
+ :register
+ (fn [{:keys [db]} [_ user-data navigation]]
+   (let [name (user-data :name)
+         email (user-data :email)
+         password (user-data :password)
+         data-name {:Name "name" :Value name}
+         attribute-name (new CognitoUserAttribute(clj->js data-name))
+         data-email {:Name "email" :Value email}
+         attribute-email (new CognitoUserAttribute(clj->js data-email))
+         attribute-list [attribute-name attribute-email]
+         pool (new CognitoUserPool (clj->js pool-data))]
+     (.signUp pool email password (clj->js attribute-list) nil
+                        (fn [error result]
+                          (if (some? error)
+                            (re-frame/dispatch [:register-error "Invalid user or password!"])
+                            (js/console.log result))
+                          ;(re-frame/dispatch [:register-success result])
+                          ;(.navigate navigation :register-compound))
+                          )))))
+
+(re-frame/reg-event-fx
  :store-attributes
  (fn [{:keys [db]} [_ user attributes]]
    (let [with-user (assoc db :cognito-user user)
@@ -65,6 +86,16 @@
    {:db (assoc-in db [:errors :login] error)}))
 
 (re-frame/reg-event-fx
+ :register-error
+ (fn [{:keys [db]} [_ error]]
+   {:db (assoc-in db [:errors :register] error)}))
+
+(re-frame/reg-event-fx
  :login-success
+ (fn [{:keys [db]} [_ user]]
+   {:db (assoc db :user user)}))
+
+(re-frame/reg-event-fx
+ :register-success
  (fn [{:keys [db]} [_ user]]
    {:db (assoc db :user user)}))
