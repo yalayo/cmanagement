@@ -27,7 +27,7 @@
                          {:onSuccess (fn [result]
                                        (js/console.log result)
                                        (re-frame/dispatch [:login-success result])
-                                       (.navigate navigation :register-compound))
+                                       (.navigate navigation :home-view))
                           :onFailure (fn [error]
                                        (let [data (js->clj error :keywordize-keys true)
                                              message (data :message)]
@@ -92,7 +92,7 @@
                                (do
                                  (re-frame/dispatch [:register-error "Invalid confirmation code!"])
                                  (js/console.error error))
-                               (.navigate navigation :register-compound)))))))
+                               (.navigate navigation :home-view)))))))
 
 (re-frame/reg-event-fx
  :login-error

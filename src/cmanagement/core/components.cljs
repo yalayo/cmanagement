@@ -2,7 +2,8 @@
   (:require [reagent.core :as reagent]
             ["react-native" :as rn]
             ["@react-navigation/stack" :refer [createStackNavigator]]
-            ["@react-navigation/native" :refer [NavigationContainer]]))
+            ["@react-navigation/native" :refer [NavigationContainer]]
+            ["@react-navigation/drawer" :refer [createDrawerNavigator]]))
 
 (defn adapt [class]
   (reagent/adapt-react-class class))
@@ -13,8 +14,10 @@
 (def text-input-adaptor (adapt rn/TextInput))
 (def touchable-opacity (adapt rn/TouchableOpacity))
 (def stack (createStackNavigator))
+(def drawer (createDrawerNavigator))
 (def navigator (adapt (.-Navigator stack)))
 (def screen (adapt (.-Screen stack)))
+(def drawer-screen (adapt (.-Screen drawer)))
 (def nav-container (adapt NavigationContainer))
 
 

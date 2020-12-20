@@ -78,7 +78,8 @@
 
 (defn confirm-user [{:keys [navigation] :as props}]
   (let [default {:code ""}
-        confirmation-code (reagent/atom default)]
+        confirmation-code (reagent/atom default)
+        errors @(re-frame/subscribe [:errors])]
     (fn []
       (let [{:keys [code]} @confirmation-code]
         [c/safe-area-view {:flex 1}

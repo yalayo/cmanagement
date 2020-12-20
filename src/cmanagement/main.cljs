@@ -4,7 +4,7 @@
             [cmanagement.core.components :as c]
             [cmanagement.users.views :as users]
             [cmanagement.users.subs :as s]
-            [cmanagement.compounds.views :as compounds]))
+            [cmanagement.dashboard.views :as dashboard]))
 
 (defn app []
   [c/nav-container
@@ -13,7 +13,7 @@
     [c/screen {:name :sign-up :component (r/reactify-component users/sign-up) :options {:gestureEnabled false}}]
     [c/screen {:name :new-password :component (r/reactify-component users/new-password) :options {:gestureEnabled false}}]
     [c/screen {:name :confirm-user :component (r/reactify-component users/confirm-user) :options {:gestureEnabled false}}]
-    [c/screen {:name :register-compound :component (r/reactify-component compounds/register-compound) :options {:gestureEnabled false}}]]])
+    [c/screen {:name :home-view :component (r/reactify-component dashboard/home) :options {:gestureEnabled false}}]]])
 
 ;; the function figwheel-rn-root must be provided. It will be called by
 ;; react-native-figwheel-bridge to render your application.
