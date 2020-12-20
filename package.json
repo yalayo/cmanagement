@@ -10,10 +10,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@aws-amplify/auth": "^3.4.14",
-    "@aws-amplify/core": "^3.8.6",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.9",
+    "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
     "amazon-cognito-identity-js": "^4.5.5",
