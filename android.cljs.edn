@@ -1,0 +1,5 @@
+^{:open-url false
+  :connect-url "ws://10.0.2.2:9500/figwheel-connect"
+  :cljs-devtools true}
+{:main cmanagement.main
+ :target :bundle}
