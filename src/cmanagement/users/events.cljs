@@ -3,6 +3,8 @@
    ;[clojure.data.json :as json]
    [re-frame.core :as re-frame]
    ["amazon-cognito-identity-js" :refer [AuthenticationDetails CognitoUserPool CognitoUserAttribute CognitoUser]]
+   ["@react-native-community/async-storage" :as s]
+   [promesa.core :as p]
    [cmanagement.users.db :as db]))
 
 (def pool-data {:UserPoolId "us-east-1_ihQJoizHk" :ClientId "6a79ijj3m88rqal042ic1rpgbb"})
@@ -25,7 +27,6 @@
      (.authenticateUser cognito-user details
                         (clj->js
                          {:onSuccess (fn [result]
-                                       (js/console.log result)
                                        (re-frame/dispatch [:login-success result])
                                        (.navigate navigation :home-view))
                           :onFailure (fn [error]
@@ -104,9 +105,19 @@
  (fn [{:keys [db]} [_ error]]
    {:db (assoc-in db [:errors :register] error)}))
 
+(defn clj->json [data]
+  (.stringify js/JSON (clj->js data)))
+
+(def as (.-default s))
+
+(defn store-user-data [user]
+  (-> (p/resolved (.setItem as "user" (clj->json user)))
+      (p/then (fn [resp]))))
+
 (re-frame/reg-event-fx
  :login-success
  (fn [{:keys [db]} [_ user]]
+   (store-user-data user)
    {:db (assoc db :user user)}))
 
 (re-frame/reg-event-fx
