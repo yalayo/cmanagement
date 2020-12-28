@@ -3,8 +3,9 @@
    ;[clojure.data.json :as json]
    [re-frame.core :as re-frame]
    ["amazon-cognito-identity-js" :refer [AuthenticationDetails CognitoUserPool CognitoUserAttribute CognitoUser]]
-   ["@react-native-community/async-storage" :as s]
-   [promesa.core :as p]
+   ["@react-native-community/async-storage" :as st]
+   [cmanagement.core.async-storage :as async-storage]
+   [clojure.string :as s]
    [cmanagement.users.db :as db]))
 
 (def pool-data {:UserPoolId "us-east-1_ihQJoizHk" :ClientId "6a79ijj3m88rqal042ic1rpgbb"})
@@ -12,7 +13,22 @@
 (re-frame/reg-event-fx
  :initialize-app
  (fn [_ _]
-   {:db db/default-db}))
+   {:db db/default-db
+    :get-user-from-ls #(re-frame/dispatch [:set-user-from-storage %])}))
+
+(re-frame/reg-fx
+ :get-user-from-ls
+ (fn [cb]
+   (async-storage/get-item "user" cb)))
+
+(re-frame/reg-event-fx
+ :set-user-from-storage
+ (fn [{db :db} [_ user]]
+   {:db (if (nil? user)
+          (assoc db :initial-route :sign-in)
+          (-> db
+              (assoc :user user)
+              (assoc :initial-route :home-view)))}))
 
 (re-frame/reg-event-fx
  :login
@@ -105,14 +121,8 @@
  (fn [{:keys [db]} [_ error]]
    {:db (assoc-in db [:errors :register] error)}))
 
-(defn clj->json [data]
-  (.stringify js/JSON (clj->js data)))
-
-(def as (.-default s))
-
 (defn store-user-data [user]
-  (-> (p/resolved (.setItem as "user" (clj->json user)))
-      (p/then (fn [resp]))))
+  (async-storage/set-item "user" (async-storage/clj->json user)))
 
 (re-frame/reg-event-fx
  :login-success

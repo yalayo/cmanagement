@@ -3,12 +3,14 @@
             [re-frame.core :as re-frame]
             [cmanagement.core.components :as c]
             [cmanagement.users.views :as users]
-            [cmanagement.users.subs :as s]
+            [cmanagement.users.subs :as usubs]
+            [cmanagement.core.subs :as csubs]
             [cmanagement.dashboard.views :as dashboard]))
 
 (defn app []
+  ;(js/console.error @(re-frame/subscribe [:initial-route]))
   [c/nav-container
-   [c/navigator {:mode :modal :header-mode :none :initial-route-name :sign-in}
+   [c/navigator {:mode :modal :header-mode :none :initial-route-name @(re-frame/subscribe [:initial-route])}
     [c/screen {:name :sign-in :component (r/reactify-component users/sign-in) :options {:gestureEnabled false}}]
     [c/screen {:name :sign-up :component (r/reactify-component users/sign-up) :options {:gestureEnabled false}}]
     [c/screen {:name :new-password :component (r/reactify-component users/new-password) :options {:gestureEnabled false}}]
