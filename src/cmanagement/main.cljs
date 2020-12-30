@@ -7,19 +7,24 @@
             [cmanagement.core.subs :as csubs]
             [cmanagement.dashboard.views :as dashboard]))
 
+(defn security []
+  [c/navigator {:mode :modal :header-mode :none :initial-route-name :sign-in}
+   [c/screen {:name :sign-in :component (r/reactify-component users/sign-in) :options {:gestureEnabled false}}]
+   [c/screen {:name :sign-up :component (r/reactify-component users/sign-up) :options {:gestureEnabled false}}]
+   [c/screen {:name :new-password :component (r/reactify-component users/new-password) :options {:gestureEnabled false}}]
+   [c/screen {:name :confirm-user :component (r/reactify-component users/confirm-user) :options {:gestureEnabled false}}]])
+
 (defn app []
-  ;(js/console.error @(re-frame/subscribe [:initial-route]))
+  ;(js/console.error @(re-frame/subscribe [:user]))
   [c/nav-container
-   [c/navigator {:mode :modal :header-mode :none :initial-route-name @(re-frame/subscribe [:initial-route])}
-    [c/screen {:name :sign-in :component (r/reactify-component users/sign-in) :options {:gestureEnabled false}}]
-    [c/screen {:name :sign-up :component (r/reactify-component users/sign-up) :options {:gestureEnabled false}}]
-    [c/screen {:name :new-password :component (r/reactify-component users/new-password) :options {:gestureEnabled false}}]
-    [c/screen {:name :confirm-user :component (r/reactify-component users/confirm-user) :options {:gestureEnabled false}}]
-    [c/screen {:name :home-view :component (r/reactify-component dashboard/home) :options {:gestureEnabled false}}]]])
+   (if (nil? @(re-frame/subscribe [:user]))
+     [security]
+     [dashboard/home])])
+
 
 ;; the function figwheel-rn-root must be provided. It will be called by
 ;; react-native-figwheel-bridge to render your application.
 ;; You can configure the name of this function with config.renderFn
 (defn figwheel-rn-root []
   (re-frame/dispatch-sync [:initialize-app])
-    (r/as-element [app]))
+  (r/as-element [app]))

@@ -12,6 +12,12 @@
    (:loading db)))
 
 (reg-sub
+ :user
+ (fn [db _]
+   (:user db)))
+
+
+(reg-sub
  :user-attributes
  (fn [db _]
    (:user-attributes db)))
