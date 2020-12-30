@@ -3,7 +3,7 @@
             ["react-native" :as rn]
             ["@react-navigation/stack" :refer [createStackNavigator]]
             ["@react-navigation/native" :refer [NavigationContainer]]
-            ["@react-navigation/drawer" :refer [createDrawerNavigator]]))
+            ["@react-navigation/drawer" :refer [createDrawerNavigator DrawerContentScrollView DrawerItemList DrawerItem]]))
 
 (defn adapt [class]
   (reagent/adapt-react-class class))
@@ -13,12 +13,17 @@
 (def text (adapt rn/Text))
 (def text-input-adaptor (adapt rn/TextInput))
 (def touchable-opacity (adapt rn/TouchableOpacity))
+(def nav-container (adapt NavigationContainer))
 (def stack (createStackNavigator))
 (def drawer (createDrawerNavigator))
 (def navigator (adapt (.-Navigator stack)))
 (def screen (adapt (.-Screen stack)))
+(def dc-scroll-view (adapt DrawerContentScrollView))
+(def drawer-item-list (adapt DrawerItemList))
+(def drawer-item (adapt DrawerItem))
+(def drawer-navigator (adapt (.-Navigator drawer)))
 (def drawer-screen (adapt (.-Screen drawer)))
-(def nav-container (adapt NavigationContainer))
+
 
 
 (defn text-input [{:keys [style] :as props}]
