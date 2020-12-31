@@ -17,7 +17,7 @@
                                         ;[errors-list (:login errors)])
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Name" :default-value name :on-change-text #(swap! compound-data assoc :name  %)}]
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Address" :default-value address :on-change-text #(swap! compound-data assoc :address %)}]
-          [c/button {:style {} :label "Save" :on-press #(do (re-frame/dispatch [:register-compound @compound-data navigation]))}]]]))))
+          [c/button {:title "Save" :on-press #(do (re-frame/dispatch [:register-compound @compound-data navigation]))}]]]))))
 
 
 

@@ -22,14 +22,14 @@
         [c/safe-area-view {:flex 1}
          [c/view {:flex 0.2}
           [c/text {:style {:font-size 30 :align-self :center}} "Sign in"]
-          [c/button {:style {} :label "Sign Up" :on-press #(.navigate navigation :sign-up)}]]
+          [c/button {:title "Sign Up" :on-press #(.navigate navigation :sign-up)}]]
 
          [c/view {:flex 0.8}
           (when (some? errors)
             [c/errors-list (errors :login)])
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! credentials assoc :email  %)}]
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :secureTextEntry true :on-change-text #(swap! credentials assoc :password %)}]
-          [c/button {:style {} :label "Sign In"
+          [c/button {:title "Sign In"
                      :on-press #(if (s/valid? ::specs/email email)
                                                              (re-frame/dispatch [:login @credentials navigation])
                                                              (re-frame/dispatch [:login-error "Invalid email, please correct it!"]))
@@ -52,7 +52,7 @@
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Email" :default-value email :on-change-text #(swap! user-data assoc :email  %)}]
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :on-change-text #(swap! user-data assoc :password %)}]
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password confirmation" :default-value password-conf :on-change-text #(swap! user-data assoc :password-conf %)}]
-          [c/button {:style {} :label "Sign Up"
+          [c/button {:title "Sign Up"
                      :on-press #(if (s/valid? ::specs/email email)
                                   (if (= password password-conf)
                                     (re-frame/dispatch [:register @user-data navigation])
@@ -74,7 +74,7 @@
           [c/text {:style {:font-size 30 :align-self :center}} "New password"]]
          [c/view {:flex 0.8}
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Password" :default-value password :secureTextEntry true :on-change-text #(swap! new-password assoc :password %)}]
-          [c/button {:style {} :label "Accept" :on-press #(re-frame/dispatch [:new-password @new-password navigation])}]]]))))
+          [c/button {:title "Accept" :on-press #(re-frame/dispatch [:new-password @new-password navigation])}]]]))))
 
 (defn confirm-user [{:keys [navigation] :as props}]
   (let [default {:code ""}
@@ -89,7 +89,7 @@
           (when (some? errors)
             [c/errors-list (errors :register)])
           [c/text-input {:style {:margin-horizontal 20 :margin-vertical 10} :placeholder "Conformation code" :default-value code :on-change-text #(swap! confirmation-code assoc :code %)}]
-          [c/button {:style {} :label "Accept"
+          [c/button {:title "Accept"
                      :on-press #(re-frame/dispatch [:confirm-user code navigation])
                      :disabled (string/blank? code)}]]]))))
 

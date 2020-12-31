@@ -10,6 +10,7 @@
 
 (def safe-area-view (adapt rn/SafeAreaView))
 (def view (adapt rn/View))
+(def button-adapter (adapt rn/Button))
 (def text (adapt rn/Text))
 (def text-input-adaptor (adapt rn/TextInput))
 (def touchable-opacity (adapt rn/TouchableOpacity))
@@ -34,13 +35,18 @@
                                             :padding-horizontal 10}
                                            style))])
 
-(defn button [{:keys [style label] :as props}]
-  [touchable-opacity (assoc props
-                            :style (merge {:align-items :center
-                                           :margin-vertical 5
-                                           :color "#5cb85c"}
-                                          style))
-   [text label]])
+#_(defn button [{:keys [style label] :as props}]
+  [view {:style {:align-items :center :margin-vertical 5 :color "#5cb85c"}}
+   [touchable-opacity (assoc props
+                             :style (merge {:align-items :center
+                                            :margin-vertical 5
+                                            :color "#5cb85c"}
+                                           style))
+    [text label]]])
+
+(defn button [props]
+  [view {:style {:align-items :center :margin-vertical 5}}
+   [button-adapter (merge {:color "#5cb85c"} props)]])
 
 (defn errors-list [errors]
   [view {:style {:margin-horizontal 20 :margin-top 10}}

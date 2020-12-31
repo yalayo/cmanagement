@@ -7,7 +7,7 @@
   [c/safe-area-view {:flex 1}
    [c/view
     [c/text "Test"]
-    [c/button {:style {} :label "Open" :on-press #(.openDrawer navigation)}]]])
+    [c/button {:title "Open" :on-press #(.openDrawer navigation)}]]])
 
 (defn custom-drawer-content [{:keys [navigation] :as props}]
   [c/dc-scroll-view
